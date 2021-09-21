@@ -1,0 +1,14 @@
+.MuiOutlinedInput-input {
+    color: white !important;
+    
+}
+
+
+.MuiPaginationItem-root {
+    color: white !important;
+}
+
+.MuiPaginationItem-rounded {
+    border-color: #141414;
+    border-radius: 10px !important;
+}
