@@ -1,90 +1,73 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from "react";
 import { TextField } from "@material-ui/core";
-import { makeStyles } from '@material-ui/core';
-import "./styles.css"
+import { makeStyles } from "@material-ui/core";
+import "./styles.css";
+import { observer } from "mobx-react-lite";
 
-
-import { observer, useLocalObservable } from 'mobx-react-lite';
-import { Store } from '../stores/store'
 
 const useStyles = makeStyles({
-    input: {
-        backgroundColor: "black",
-        border: "0.5px solid white",
-        color: "white",
-        borderRadius: "15px", 
-        height: "40px",
-        width: "" ,
-        
-    },
-    div1: {
-        height: "10%",
-        marginTop: "1%",
-    },
-    div2: {
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-    }
-})
-interface IProps{
-    setSearchNameFilter: any;
+	input: {
+		backgroundColor: "black",
+		border: "0.5px solid white",
+		color: "white",
+		borderRadius: "15px",
+		height: "40px",
+		width: "",
+	},
+	div1: {
+		height: "10%",
+		marginTop: "1%",
+	},
+	div2: {
+		display: "flex",
+		flexDirection: "column",
+		alignItems: "center",
+	},
+});
+interface IProps {
+	setSearchNameFilter(str: string): void;
 }
-const Header:React.FC<IProps> = ({ setSearchNameFilter }) => {
+const Header: React.FC<IProps> = (props) => {
 
-    const classes = useStyles();
-    const store = useLocalObservable(() => new Store())
-    
-    const [toNameFilter, setToNameFilter] = useState("");
+	const classes = useStyles();
 
-    const doFilter = () => {
-      setSearchNameFilter(toNameFilter);
-      
-    };
+	const [toNameFilter, setToNameFilter] = useState("");
 
+	const doFilter = () => {
+		props.setSearchNameFilter(toNameFilter);
 
+	};
 
-    const handleSubmitFilter = (e:React.KeyboardEvent<HTMLDivElement>) => {
-        var typingTimer;
-        clearTimeout(typingTimer)
-        typingTimer = setTimeout(doFilter, 2000)
-
-    }
+	const handleSubmitFilter = () => {
+		setTimeout(doFilter, 2000);
+	};
 
 
-    const changeNameTF = (e:React.ChangeEvent<HTMLInputElement>) => {
-        setToNameFilter(e.target.value);
-    };
+	const changeNameTF = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setToNameFilter(e.target.value);
+	};
 
-    
+	return (
+		<div className={classes.div1}>
+			<div className={classes.div2}>
 
-    return (
-        <div className={classes.div1}>
-            <div className={classes.div2}>
+				<div >
+					<TextField
+						type="text"
+						className={classes.input}
+						size="small"
+						value={toNameFilter}
+						onChange={changeNameTF}
+						onKeyUp={handleSubmitFilter}
+						variant="outlined"
+						placeholder="Ex: Luca"
+					/>
 
-                <div >
-                    <TextField
-                        type="text"
-                        className={classes.input}
-                        size="small"
-                        value={toNameFilter}
-                        onChange={changeNameTF}
-                        onKeyUp={handleSubmitFilter}
-                        variant="outlined"
-                        placeholder="Ex: Luca"
-                    />
+				</div>
+			</div>
 
-                </div>
-            </div>
-
-        </div>
-    )
-}
+		</div>
+	);
+};
 
 export default observer(Header);
-
-
-
-
-
-

@@ -1,57 +1,50 @@
-import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core';
-import HeaderTable from './headertable';
-import Movie from './movieCard';
+import React from "react";
+import { makeStyles } from "@material-ui/core";
+import HeaderTable from "./headertable";
+import Movie from "./movieCard";
+import * as types from "../services/apitypes";
+import { observer } from "mobx-react-lite";
 
-import * as types from '../services/apitypes'
-import { observer, useLocalObservable } from 'mobx-react-lite'
-import { Store } from '../stores/store'
 
 const useStyles = makeStyles({
 
-  div1: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    alignItems: "center",
-    justifyContent: "center"
-  },
-
-})
+	div1: {
+		display: "flex",
+		flexDirection: "row",
+		flexWrap: "wrap",
+		alignItems: "center",
+		justifyContent: "center",
+	},
+});
 
 interface IProps {
-  moviesList: types.Movie[];
+	moviesList: types.Movie[];
+	setFilterMovies(filterStr: string): void;
 }
 
-const Table: React.FC<IProps> = ({ moviesList }) => {
+const Table: React.FC<IProps> = (props) => {
 
-  const classes = useStyles();
-  const store = useLocalObservable(() => new Store())
+	const classes = useStyles();
 
-  const createNameFilter = (filterStr: string) => {
-    store.setSearchNameFilter(filterStr);
-  };
-
-
-  return (
-    <div >
-      <HeaderTable
-        setSearchNameFilter={createNameFilter}
-      />
+	const createNameFilter = (filterStr: string) => {
+		props.setFilterMovies(filterStr);
+	};
 
 
+	return (
+		<div >
+			<HeaderTable
+				setSearchNameFilter={createNameFilter}
+			/>
 
-      <div className={classes.div1}>
-        {moviesList.map((item) => (
-          <Movie key={item.id} movie={item} />
-        ))}
-      </div>
+			<div className={classes.div1}>
+				{props.moviesList.map((item, key) => (
+					<Movie key={key} movie={item} />
+				))}
+			</div>
 
-
-
-    </div>
-  );
-
-}
+		</div>
+	);
+};
 
 export default observer(Table);

@@ -1,49 +1,46 @@
-import React, { useEffect } from 'react';
-import { makeStyles } from '@material-ui/core';
-import Pagination from '@material-ui/lab/Pagination';
+import React from "react";
+import { makeStyles } from "@material-ui/core";
+import Pagination from "@material-ui/lab/Pagination";
+import { observer } from "mobx-react-lite";
 
-
-import { useLocalObservable, observer } from 'mobx-react-lite'
-import { Store } from '../stores/store'
 
 const useStyles = makeStyles({
-    div1: {
-        marginTop: "3%"
-    },
-    paginationS: {
-        backgroundColor: "black",
-        borderRadius: "10px",
-    }
-})
+	div1: {
+		marginTop: "3%",
+	},
+	paginationS: {
+		backgroundColor: "black",
+		borderRadius: "10px",
+	},
+});
 interface IProps{
-    totalPages:number
+	totalPages: number;
+	setTotalPages(num: number): void;
+	setPage(num: number): void;
 }
-const Pags:React.FC<IProps> = () => {
 
-    const classes = useStyles();
+const Pags: React.FC<IProps> = (props) => {
 
-    const store = useLocalObservable(() => new Store())
+	const classes = useStyles();
 
+	const handleChange = (n: number) => {
+		props.setTotalPages(n);
+		props.setPage(n);
+	};
 
-
-    const handleChange = (n:number) => {
-        store.setPage(n);
-        console.log(store.page)
-    }
-
-    return (
-        <div className={classes.div1}>
-            <div>
-                <Pagination
-                    className={classes.paginationS}
-                    count={store.quantPages}
-                    variant="outlined"
-                    shape="rounded"
-                    onChange={(_, number:number) => handleChange(number)} 
-                    />
-            </div>
-        </div>
-    );
-}
+	return (
+		<div className={classes.div1}>
+			<div>
+				<Pagination
+					className={classes.paginationS}
+					count={props.totalPages}
+					variant="outlined"
+					shape="rounded"
+					onChange={(_, number: number) => handleChange(number)}
+				/>
+			</div>
+		</div>
+	);
+};
 
 export default observer(Pags);
